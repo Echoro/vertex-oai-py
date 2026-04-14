@@ -15,7 +15,7 @@
 
 ### 💡 项目背景
 
-本项目参考并改进了 [Gallentboy/vertex-oai](https://github.com/Gallentboy/vertex-oai.git)。原项目在使用 \`gemini-3-flash-preview\` 等最新模型时可能会遇到 \`thought_signature\` 缺失导致的 400 错误。本仓库使用 Python 重写，并集成了 \`litellm\` 作为转换层，完美解决了兼容性问题。下面的部分内容由ai分析后生成。
+本项目参考并改进了 [Gallentboy/vertex-oai](https://github.com/Gallentboy/vertex-oai.git)。原项目在使用 `gemini-3-flash-preview` 等最新模型时可能会遇到 `thought_signature` 缺失导致的 400 错误。本仓库使用 Python 重写，并集成了 `litellm` 作为转换层，完美解决了兼容性问题。
 
 <details>
 <summary><b>查看已知错误日志示例</b></summary>
