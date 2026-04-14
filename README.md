@@ -52,17 +52,26 @@
 
 ## ⚙️ 配置说明
 
-编辑 \`config.yaml\`，填入您的 Google Cloud 项目信息：
+编辑 `config.yaml`，填入您的 Google Cloud 项目信息。完整的配置项说明如下：
 
-\`\`\`yaml
+```yaml
 vertex_settings:
-  project: "your-gcp-project-id"  # 您的 GCP 项目 ID
-  location: "global"             # 您的 GCP 区域
+  project: "your-gcp-project-id"  # 必填：您的 GCP 项目 ID
+  location: "global"             # 必填：您的 GCP 区域（如 us-central1 或 global）
 
 server:
-  host: "0.0.0.0"
-  port: 8080
-\`\`\`
+  host: "0.0.0.0"                # 监听地址
+  port: 8080                     # 监听端口
+  debug: false                   # 是否开启调试模式（记录详细的请求/响应日志）
+  log_to_file: true              # 是否将日志写入文件
+  max_log_lines: 10000           # 日志文件最大保留行数（自动清理）
+```
+
+### 🔐 身份验证
+
+在使用本项目前，请确保您拥有访问 Vertex AI 的权限。推荐以下两种方式：
+1. **本地开发**：安装 Google Cloud SDK 并运行 `gcloud auth application-default login`。
+2. **服务器部署**：创建 Service Account，下载 JSON 密钥并设置环境变量 `export GOOGLE_APPLICATION_CREDENTIALS="/path/to/your/key.json"`。
 
 ## 🚀 快速开始
 

@@ -44,17 +44,26 @@ This project is an improved Python implementation inspired by [Gallentboy/vertex
 
 ## ⚙️ Configuration
 
-Edit \`config.yaml\` to specify your Google Cloud Project ID and location:
+Edit `config.yaml` with your Google Cloud project info. Detailed options are shown below:
 
-\`\`\`yaml
+```yaml
 vertex_settings:
-  project: "your-gcp-project-id"  # Replace with your GCP project ID
-  location: "global"             # Replace with your GCP location
+  project: "your-gcp-project-id"  # REQUIRED: Your GCP Project ID
+  location: "global"             # REQUIRED: Your GCP region (e.g., us-central1 or global)
 
 server:
-  host: "0.0.0.0"
-  port: 8080
-\`\`\`
+  host: "0.0.0.0"                # Server host address
+  port: 8080                     # Server port
+  debug: false                   # Set to true for detailed request/response logging
+  log_to_file: true              # Write logs to file (logs/vertex-oai-py.log)
+  max_log_lines: 10000           # Max lines for log rotation/cleanup
+```
+
+### 🔐 Authentication
+
+Before running this project, ensure you have access to Vertex AI. Recommended methods:
+1. **Local Development**: Install Google Cloud SDK and run `gcloud auth application-default login`.
+2. **Server Deployment**: Create a Service Account, download the JSON key, and set `export GOOGLE_APPLICATION_CREDENTIALS="/path/to/your/key.json"`.
 
 ## 🚀 Quick Start
 
