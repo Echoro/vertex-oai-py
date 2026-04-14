@@ -1,172 +1,108 @@
-# Vertex OAI Python Gateway (Vertex AI 到 OpenAI 兼容网关)
+# 🚀 Vertex OAI Python Gateway
 
-[English Version](./README_EN.md)
+<p align="center">
+  <a href="./README_EN.md">English Version</a> |
+  <b>中文说明</b>
+</p>
 
-这是一个为 Google Cloud Vertex AI (Gemini 模型) 提供的 OpenAI 兼容网关。
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3.13+-blue.svg" alt="Python Version">
+  <img src="https://img.shields.io/badge/FastAPI-0.115+-green.svg" alt="FastAPI">
+  <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License">
+</p>
 
-本项目允许您使用 OpenAI 的 API 格式与托管在 Vertex AI 上的 Google Gemini 模型进行交互。这对于 GitHub Copilot 等期待 OpenAI API 格式的工具特别有用。
+这是一个为 **Google Cloud Vertex AI (Gemini 模型)** 提供的 OpenAI 兼容网关。
 
-## 功能特性
+### 💡 项目背景
 
--   **OpenAI API 兼容性**: 实现了 `/v1/models` 和 `/v1/chat/completions` 接口。
--   **Vertex AI 集成**: 通过 `litellm` 和 `google-cloud-aiplatform` 直接与 Google Cloud Vertex AI 交互。
--   **守护进程模式**: 可作为后台服务运行（适用于类 Unix 系统）。
--   **模型缓存**: 缓存可用的 Vertex 模型列表，提高响应速度。
--   **流式输出支持**: 支持用于流式对话补全的服务器发送事件 (SSE)。
--   **字段保留**: 记录并保留 `thought_signatures` 等重要字段，以确保兼容性。
--   **现代 Python 栈**: 使用 FastAPI、Uvicorn 和 Python 3.13+ 构建。
+本项目参考并改进了 [Gallentboy/vertex-oai](https://github.com/Gallentboy/vertex-oai.git)。原项目在使用 \`gemini-3-flash-preview\` 等最新模型时可能会遇到 \`thought_signature\` 缺失导致的 400 错误。本仓库使用 Python 重写，并集成了 \`litellm\` 作为转换层，完美解决了兼容性问题。
 
-## 项目结构
+<details>
+<summary><b>查看已知错误日志示例</b></summary>
 
--   `py_src/`: 核心 Python 实现。
-    -   `app.py`: FastAPI 应用程序逻辑。
-    -   `config.py`: 配置管理。
-    -   `main.py`: CLI 入口点（启动/停止/重启/状态）。
--   `src/`: (实验性) Rust 实现。
--   `config.yaml`: 服务配置（GCP 项目 ID、位置、服务器主机/端口）。
--   `main.py`: 启动网关的入口文件。
--   `test_api.py`: 用于验证功能的简单测试脚本。
+\`\`\`log
+原因: OAI Compatible API error: [400] Bad Request [{ "error": { "code": 400, "message": "Unable to submit request because function call create_file in the 5. content block is missing a thought_signature..." } }]
+\`\`\`
+</details>
 
-## 配置
+---
 
-编辑 `config.yaml` 来指定您的 Google Cloud 项目 ID 和位置：
+## ✨ 功能特性
 
-```yaml
+-   ✅ **OpenAI API 全兼容**: 完美对接 \`/v1/models\` 和 \`/v1/chat/completions\`。
+-   ☁️ **Vertex AI 原生集成**: 基于 \`google-cloud-aiplatform\` 和 \`litellm\`。
+-   👻 **守护进程支持**: 支持类 Unix 系统的后台运行模式。
+-   ⚡ **高效缓存**: 自动缓存可用模型列表，减少 API 调用延迟。
+-   🌊 **流式输出**: 完整支持 SSE (Server-Sent Events) 流式补全。
+-   🧩 **字段保留**: 特别保留了 \`thought_signatures\` 等高级字段，确保与 GitHub Copilot 的深度兼容。
+-   🛠️ **现代技术栈**: 采用 FastAPI + Uvicorn + Python 3.13。
+
+## 📂 项目结构
+
+\`\`\`text
+├── py_src/          # 核心 Python 源代码
+│   ├── app.py       # FastAPI 路由与业务逻辑
+│   ├── config.py    # 配置加载与解析
+│   └── main.py      # CLI 命令行入口
+├── src/             # (实验性) Rust 实现版本
+├── config.yaml      # 全局配置文件
+├── main.py          # 项目快速启动入口
+└── test_api.py      # API 自动化测试脚本
+\`\`\`
+
+## ⚙️ 配置说明
+
+编辑 \`config.yaml\`，填入您的 Google Cloud 项目信息：
+
+\`\`\`yaml
 vertex_settings:
-  project: "your-gcp-project-id"  # 替换为您的 GCP 项目 ID
-  location: "global"             # 替换为您的 GCP 位置
+  project: "your-gcp-project-id"  # 您的 GCP 项目 ID
+  location: "global"             # 您的 GCP 区域
 
 server:
   host: "0.0.0.0"
   port: 8080
-```
+\`\`\`
 
-## 安装
+## 🚀 快速开始
 
-本项目使用 `uv` 进行依赖管理：
+本项目推荐使用 [uv](https://github.com/astral-sh/uv) 进行极速依赖管理。
 
-```bash
-# 安装依赖
+\`\`\`bash
+# 1. 安装依赖
 uv sync
 
-# 激活环境
+# 2. 激活环境
 source .venv/bin/activate
-```
 
-## 使用方法
-
-您可以使用以下命令管理网关：
-
-```bash
-# 启动服务器（如果支持守护进程模式，默认在后台运行）
+# 3. 启动服务
 python main.py start
+\`\`\`
 
-# 在前台启动以便调试
-python main.py start --foreground
+## 🛠️ 常用命令
 
-# 停止后台服务器
-python main.py stop
+| 命令 | 说明 |
+| :--- | :--- |
+| \`python main.py start\` | 启动服务器（默认后台运行） |
+| \`python main.py start --foreground\` | 在前台启动（方便调试） |
+| \`python main.py stop\` | 停止后台服务器 |
+| \`python main.py restart\` | 重启服务 |
+| \`python main.py status\` | 查看运行状态 |
 
-# 重启服务器
-python main.py restart
+## 🧪 接口测试
 
-# 查看服务器状态
-python main.py status
-```
+运行以下脚本快速验证服务是否正常：
 
-## 测试
-
-提供了一个基础测试脚本：
-
-```bash
+\`\`\`bash
 python test_api.py
-```
+\`\`\`
 
-## 部署
+## 🚢 部署建议
 
-该网关设计为以守护进程服务运行。在生产环境中，请确保配置了适当的 GCP 身份验证（例如，使用 `GOOGLE_APPLICATION_CREDENTIALS` 或运行 `gcloud auth application-default login`）。
-# Vertex OAI Python Gateway
+在生产环境中，请确保已正确配置 GCP 身份验证：
+-   设置环境变量 \`GOOGLE_APPLICATION_CREDENTIALS\` 指向您的 Service Account JSON。
+-   或者在服务器上运行 \`gcloud auth application-default login\`。
 
-An OpenAI-compatible gateway for Google Cloud Vertex AI (Gemini models).
+---
 
-This project allows you to use OpenAI's API format to interact with Google's Gemini models hosted on Vertex AI. It's particularly useful for tools like GitHub Copilot and others that expect OpenAI's API format.
-
-## Features
-
--   **OpenAI API Compatibility**: Implements `/v1/models` and `/v1/chat/completions`.
--   **Vertex AI Integration**: Directly interacts with Google Cloud Vertex AI using `litellm` and `google-cloud-aiplatform`.
--   **Daemon Mode**: Can run as a background service (Unix-like systems).
--   **Model Caching**: Caches the list of available Vertex models for faster responses.
--   **Streaming Support**: Supports server-sent events for streaming chat completions.
--   **Field Preservation**: Logs and preserves important fields like `thought_signatures` for compatibility.
--   **Modern Python Stack**: Built with FastAPI, Uvicorn, and Python 3.13+.
-
-## Project Structure
-
--   `py_src/`: Core Python implementation.
-    -   `app.py`: FastAPI application logic.
-    -   `config.py`: Configuration management.
-    -   `main.py`: CLI entry point (start/stop/restart/status).
--   `src/`: (Experimental) Rust implementation.
--   `config.yaml`: Service configuration (GCP project, location, server host/port).
--   `main.py`: Entry point for starting the gateway.
--   `test_api.py`: Simple test script for verifying functionality.
-
-## Configuration
-
-Edit `config.yaml` to specify your Google Cloud Project ID and location:
-
-```yaml
-vertex_settings:
-  project: "your-gcp-project-id"  # Replace with your GCP project ID
-  location: "global"             # Replace with your GCP location
-
-server:
-  host: "0.0.0.0"
-  port: 8080
-```
-
-## Installation
-
-This project uses `uv` for dependency management:
-
-```bash
-# Install dependencies
-uv sync
-
-# Activate the environment
-source .venv/bin/activate
-```
-
-## Usage
-
-You can manage the gateway using the following commands:
-
-```bash
-# Start the server (default in background if daemon mode is supported)
-python main.py start
-
-# Start in foreground for debugging
-python main.py start --foreground
-
-# Stop the background server
-python main.py stop
-
-# Restart the server
-python main.py restart
-
-# Check server status
-python main.py status
-```
-
-## Testing
-
-A basic test script is provided:
-
-```bash
-python test_api.py
-```
-
-## Deployment
-
-The gateway is designed to run as a daemon service. For production environments, ensure you have appropriate GCP authentication configured (e.g., using `GOOGLE_APPLICATION_CREDENTIALS` or `gcloud auth application-default login`).
+<p align="center">Made with ❤️ for the AI Community</p>
