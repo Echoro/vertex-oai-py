@@ -13,6 +13,7 @@ def test_models():
     print(f"Status: {response.status_code}")
     if response.status_code == 200:
         data = response.json()
+        print(data)
         print(f"Found {len(data['data'])} models")
         if data['data']:
             print(f"First model: {data['data'][0]['id']}")
@@ -29,7 +30,7 @@ def test_completion(model="gemini-1.5-pro"):
             {"role": "user", "content": "Hello, how are you?"}
         ]
     }
-    
+
     response = requests.post(url, headers=headers, json=data)
     print(f"Status: {response.status_code}")
     if response.status_code == 200:
@@ -40,5 +41,5 @@ def test_completion(model="gemini-1.5-pro"):
 if __name__ == "__main__":
     test_health()
     test_models()
-    test_completion("gemini-1.5-flash")
-    test_completion("google/gemini-1.5-pro")
+    test_completion("gemini-2.5-flash")
+    test_completion("google/gemini-2.5-flash")

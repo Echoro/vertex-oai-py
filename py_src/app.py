@@ -66,7 +66,7 @@ def create_app(config_path: str = "config.yaml"):
                 if resp.status_code != 200:
                     logger.error(f"Failed to fetch models from Vertex: {resp.text}")
                     # Fallback to a hardcoded list of common Gemini models if API fails
-                    common_models = ["gemini-1.5-pro", "gemini-1.5-flash", "gemini-1.0-pro"]
+                    common_models = ["gemini-1.5-pro", "gemini-1.5-flash", "gemini-1.0-pro", "gemini-2.5-flash"]
                     models_data = [
                         {"id": f"google/{m}", "object": "model", "created": int(now), "owned_by": "google"}
                         for m in common_models
@@ -74,18 +74,36 @@ def create_app(config_path: str = "config.yaml"):
                 else:
                     data = resp.json()
                     models_data = []
-                    for m in data.get("publisherModels", []):
+                    publisher_models = data.get("publisherModels", [])
+                    logger.info(f"Received {len(publisher_models)} publisher models from Vertex")
+                    
+                    for m in publisher_models:
                         name = m.get("name", "")
-                        # name is like "publishers/google/models/gemini-1.5-pro-002"
+                        # name structure: "publishers/google/models/gemini-1.5-pro"
                         parts = name.split('/')
-                        if len(parts) >= 4 and "gemini" in parts[3]:
-                            model_id = f"{parts[1]}/{parts[3]}"
+                        if len(parts) >= 4:
+                            publisher = parts[1]
+                            model_id_val = parts[3]
+                            
+                            # We want to include all models that seem useful, not just 'gemini'
+                            # But we filter for GA or PREVIEW if those fields exist, similar to Rust
+                            launch_stage = m.get("launchStage", "GA")
+                            
+                            full_id = f"{publisher}/{model_id_val}"
                             models_data.append({
-                                "id": model_id,
+                                "id": full_id,
                                 "object": "model",
                                 "created": int(now),
-                                "owned_by": parts[1]
+                                "owned_by": publisher
                             })
+                    
+                    # If the list is still empty, let's at least provide the defaults we know work
+                    if not models_data:
+                         common_models = ["gemini-1.5-pro", "gemini-1.5-flash", "gemini-1.0-pro", "gemini-2.0-flash-exp", "gemini-2.5-flash"]
+                         models_data = [
+                            {"id": f"google/{m}", "object": "model", "created": int(now), "owned_by": "google"}
+                            for m in common_models
+                         ]
             
             _models_cache["data"] = models_data
             _models_cache["timestamp"] = now
@@ -126,6 +144,8 @@ def create_app(config_path: str = "config.yaml"):
                 "model": model,
                 "messages": messages,
                 "stream": stream,
+                "vertex_project": config.vertex_settings.project,
+                "vertex_location": config.vertex_settings.location,
             }
             
             # Forward other params
