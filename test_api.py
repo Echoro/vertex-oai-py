@@ -41,5 +41,6 @@ def test_completion(model="gemini-1.5-pro"):
 if __name__ == "__main__":
     test_health()
     test_models()
-    test_completion("gemini-2.5-flash")
-    test_completion("google/gemini-2.5-flash")
+    test_completion("gemini-3-flash-preview")
+    test_completion("google/gemini-3-flash-preview")
+# litellm.completion不会自己处理吗？我总感觉问题可能不知是json格式的问题

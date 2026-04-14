@@ -1,7 +1,7 @@
 # config.yaml
 vertex_settings:
   project: "test-project-493209"  # Replace with your GCP project ID
-  location: "us-central1"   # Replace with your GCP location
+  location: "global"   # Replace with your GCP location
 
 server:
   host: "0.0.0.0"
