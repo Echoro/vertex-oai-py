@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+logs/
+.venv/
+.vertex_oai_py.pid
+.pid
+uv.lock
