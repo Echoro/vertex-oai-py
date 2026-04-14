@@ -1,6 +1,4 @@
-def main():
-    print("Hello from vertex-oai-my!")
-
+from py_src.main import main
 
 if __name__ == "__main__":
     main()
