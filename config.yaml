@@ -2,8 +2,8 @@
 vertex_settings:
   project: "my-project-id"  # Replace with your GCP project ID
   location: "us-central1"   # Replace with your GCP location
-  model: "vertex_ai/gemini-pro" # Default model to use
 
 server:
   host: "0.0.0.0"
   port: 8080
+

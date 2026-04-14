@@ -5,7 +5,6 @@ from pydantic import BaseModel
 class VertexSettings(BaseModel):
     project: str
     location: str
-    model: str
 
 class ServerSettings(BaseModel):
     host: str = "0.0.0.0"
