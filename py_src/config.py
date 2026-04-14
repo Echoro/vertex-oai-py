@@ -9,6 +9,9 @@ class VertexSettings(BaseModel):
 class ServerSettings(BaseModel):
     host: str = "0.0.0.0"
     port: int = 8080
+    debug: bool = False
+    log_to_file: bool = True
+    max_log_lines: int = 10000
 
 class Config(BaseModel):
     vertex_settings: VertexSettings
