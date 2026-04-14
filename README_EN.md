@@ -21,17 +21,18 @@ This project is an improved Python implementation inspired by [Gallentboy/vertex
 
 ## ✨ Features
 
--   ✅ **OpenAI API Compatibility**: Implements \`/v1/models\` and \`/v1/chat/completions\`.
--   ☁️ **Vertex AI Integration**: Directly interacts with Google Cloud Vertex AI using \`google-cloud-aiplatform\` and \`litellm\`.
+-   ✅ **OpenAI API Compatibility**: Implements `/v1/models` and `/v1/chat/completions`.
+-   ☁️ **Vertex AI Integration**: Directly interacts with Google Cloud Vertex AI using `google-cloud-aiplatform` and `litellm`.
 -   👻 **Daemon Mode**: Supports running as a background service on Unix-like systems.
 -   ⚡ **Smart Caching**: Caches the list of available Vertex models for faster responses.
 -   🌊 **Streaming Support**: Fully supports server-sent events (SSE) for streaming chat completions.
--   🧩 **Field Preservation**: Specifically preserves fields like \`thought_signatures\` for deep GitHub Copilot compatibility.
+-   🧩 **Field Preservation**: Specifically preserves fields like `thought_signatures` for deep GitHub Copilot compatibility.
 -   🛠️ **Modern Stack**: Built with FastAPI, Uvicorn, and Python 3.13+.
 
 ## 📂 Project Structure
 
-\`\`\`text
+```text
+project root folder
 ├── py_src/          # Core Python source code
 │   ├── app.py       # FastAPI routes and logic
 │   ├── config.py    # Configuration management
@@ -40,7 +41,7 @@ This project is an improved Python implementation inspired by [Gallentboy/vertex
 ├── config.yaml      # Global configuration
 ├── main.py          # Entry point for the gateway
 └── test_api.py      # API automation test script
-\`\`\`
+```
 
 ## ⚙️ Configuration
 
@@ -69,7 +70,7 @@ Before running this project, ensure you have access to Vertex AI. Recommended me
 
 This project uses [uv](https://github.com/astral-sh/uv) for fast dependency management.
 
-\`\`\`bash
+```bash
 # 1. Install dependencies
 uv sync
 
@@ -78,31 +79,31 @@ source .venv/bin/activate
 
 # 3. Start server
 python main.py start
-\`\`\`
+```
 
 ## 🛠️ Commands
 
 | Command | Description |
 | :--- | :--- |
-| \`python main.py start\` | Start the server (runs in background by default) |
-| \`python main.py start --foreground\` | Start in foreground (for debugging) |
-| \`python main.py stop\` | Stop the background server |
-| \`python main.py restart\` | Restart the server |
-| \`python main.py status\` | Check server status |
+| `python main.py start` | Start the server (runs in background by default) |
+| `python main.py start --foreground` | Start in foreground (for debugging) |
+| `python main.py stop` | Stop the background server |
+| `python main.py restart` | Restart the server |
+| `python main.py status` | Check server status |
 
 ## 🧪 Testing
 
 Run the provided script to verify functionality:
 
-\`\`\`bash
+```bash
 python test_api.py
-\`\`\`
+```
 
 ## 🚢 Deployment
 
 Ensure your GCP authentication is configured:
--   Set \`GOOGLE_APPLICATION_CREDENTIALS\` environment variable.
--   Or run \`gcloud auth application-default login\` on your server.
+-   Set `GOOGLE_APPLICATION_CREDENTIALS` environment variable.
+-   Or run `gcloud auth application-default login` on your server.
 
 ---
 
