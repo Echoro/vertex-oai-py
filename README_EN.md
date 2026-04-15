@@ -54,7 +54,7 @@ vertex_settings:
 
 server:
   host: "0.0.0.0"                # Server host address
-  port: 8080                     # Server port
+  port: 8878                     # Server port
   debug: false                   # Set to true for detailed request/response logging
   log_to_file: true              # Write logs to file (logs/vertex-oai-py.log)
   max_log_lines: 10000           # Max lines for log rotation/cleanup

@@ -8,7 +8,7 @@ class VertexSettings(BaseModel):
 
 class ServerSettings(BaseModel):
     host: str = "0.0.0.0"
-    port: int = 8080
+    port: int = 8878
     debug: bool = False
     log_to_file: bool = True
     max_log_lines: int = 10000
@@ -21,8 +21,8 @@ def load_config(config_path: str = "config.yaml") -> Config:
     path = Path(config_path)
     if not path.exists():
         raise FileNotFoundError(f"Config file {config_path} not found")
-    
+
     with open(path, "r") as f:
         data = yaml.safe_load(f)
-    
+
     return Config(**data)

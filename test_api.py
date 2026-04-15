@@ -3,13 +3,13 @@ import json
 
 def test_health():
     print("\n--- Testing Health ---")
-    response = requests.get("http://localhost:8080/health")
+    response = requests.get("http://localhost:8878/health")
     print(f"Status: {response.status_code}")
     print(response.json())
 
 def test_models():
     print("\n--- Testing Models Listing ---")
-    response = requests.get("http://localhost:8080/v1/models")
+    response = requests.get("http://localhost:8878/v1/models")
     print(f"Status: {response.status_code}")
     if response.status_code == 200:
         data = response.json()
@@ -22,7 +22,7 @@ def test_models():
 
 def test_completion(model="gemini-1.5-pro"):
     print(f"\n--- Testing Completion with model: {model} ---")
-    url = "http://localhost:8080/v1/chat/completions"
+    url = "http://localhost:8878/v1/chat/completions"
     headers = {"Content-Type": "application/json"}
     data = {
         "model": model,
